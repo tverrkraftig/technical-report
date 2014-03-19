@@ -1,0 +1,75 @@
+\documentclass[svgnames, 11pt]{report}
+
+\usepackage[left=2.5cm, right=2.5cm]{geometry}   % set margins
+\usepackage[utf8]{inputenc}                      % set input encoding to utf8
+\usepackage{tikz}                                % tikz drawing library
+\usepackage{kpfonts}                             % kpfonts
+\usepackage[explicit]{titlesec}                  % titlesec
+\usepackage{hyperref}                            % use \url
+\usepackage{ifthen}                              % \ifthenelse{condition}{if valid}{if not valid}
+\usepackage{float}                               % avoid tables/figures to "float away" with [H]
+\usepackage{titling}                             % use \thetitle, \thedate, osv
+\usepackage{graphicx}                            % used to include graphics
+
+% Use tikx libraries
+\usetikzlibrary{shadows.blur}
+\usetikzlibrary{shapes.symbols}
+
+% Define space between sections
+\newcommand{\secspace}{0.5cm}
+
+% Define chapter style
+\newcommand*\chapterlabel{}
+\titleformat{\chapter}
+  {\gdef\chapterlabel{}
+   \normalfont\sffamily\Huge\bfseries\scshape}
+  {\gdef\chapterlabel{}}{0pt}               % change to \chapterlabel{\thechapter\ } to display numbering in title
+  {\begin{tikzpicture}[remember picture,overlay]
+    \node[yshift=-3.0cm, xshift=1.1cm] at (current page.north west)
+      {\begin{tikzpicture}[remember picture, overlay]
+        \draw[top color=red, bottom color=DarkRed, blur shadow] (0,0) rectangle
+              (2cm,3cm);
+        \node[yshift=0.7cm, xshift=1cm, scale=2]
+              {\color{white}
+                \ifthenelse{\thechapter < 1} % if \thechapter < 1, display nothing
+                {}
+                {\thechapter}};
+        \node[anchor=west, yshift=0.35cm, xshift=2cm]
+              {\color{black}\chapterlabel#1};
+       \end{tikzpicture}
+      };
+   \end{tikzpicture}
+  }
+\titlespacing*{\chapter}{0pt}{50pt}{-60pt}
+
+% Define section style
+\titleformat{\section}[block]
+  {\huge\bfseries
+    \tikz[overlay] \shade[left color=DarkRed,right color=red, blur shadow] (0,-1ex) rectangle (\textwidth,1em);}%    
+  {\color{white}\ \thesection}
+  {1em}
+  {\color{white}#1}
+
+% Define subsection style
+\titleformat{\subsection}[block]%
+  {\LARGE\bfseries
+    \tikz[overlay] \shade[left color=DarkRed,right color=red, blur shadow] (0,-1ex) rectangle (\textwidth,1em);}%    
+  {\color{white}\ \thesubsection}
+  {1em}
+  {\color{white} #1}
+
+% Define title, author and date
+\title{Technical Report}
+\author{\Large Anders \textsc{Strand} \\
+        \Large Emil Taylor \textsc{Bye} \\
+        \Large Petter S. \textsc{Storvik} \\
+        \Large Odd M. \textsc{Trondrud} \\
+        \Large Ole \textsc{Bauck}}
+\date{\today}
+
+% Document
+\begin{document}
+
+\input{document.tex}
+
+\end{document}

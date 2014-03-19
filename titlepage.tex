@@ -1,0 +1,21 @@
+% Titlepage
+\begin{titlepage}
+\begin{tikzpicture}[remember picture,overlay]
+    \node[yshift=-10cm, xshift=0.01cm] at (current page.north west)
+      {\begin{tikzpicture}[remember picture, overlay]
+           \draw[top color=red, bottom color=DarkRed] (0,0) rectangle
+                (\paperwidth-0.02cm,10cm);
+           \node[anchor=west, yshift=3cm, xshift=2cm, scale=0.2cm]
+                {\color{white} \thetitle};
+           \node[anchor=west, yshift=0.5cm, xshift=17cm, scale=1.5]
+                {\color{white} \thedate};
+           \node[anchor=west, yshift=-5cm, xshift=2.7cm, align=left]
+                {\color{black} \theauthor};
+           \node[yshift=-14.5cm, xshift=11cm, align=center]
+                {\color{black}\large Eksperter i Team};
+           \node[yshift=-15cm, xshift=11cm, align=center]
+                {\color{black}\large Norges Teknisk-Naturvitenskapelige Universitet};
+       \end{tikzpicture}
+      };
+   \end{tikzpicture}
+\end{titlepage}
