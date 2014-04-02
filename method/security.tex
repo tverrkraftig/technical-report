@@ -1,15 +1,53 @@
 \section{Security}
-\begin{itemize}
-	\item HTTPS everything (encrypted communication)
-	\item Public key infrastructure thing with the signing of messages to validate user identity
-	\item some references to the security of hmac and the algorithms we were going to use
-\end{itemize}
+Concerns related to security were, as they typically are in this day and age, a thing.
+Several issues arise as the platform allows users to control agents by issuing commands through a publicly available API, namely:
 
-%TODO: write about the HTTPS stuff
+% Agent = active/connected robot/entity/thing
+% user = bruker ja, ok?
+% user client = bruker som tar i bruk webgrensesnittet
+% server = serveren
+% client = både agenter og user clients
+\begin{enumerate}
+	\item Restricting execution of commands.
+	\item Preventing replay of commands (replay attack).
+	\item Preventing others from masquerading as the server and spreading misinformation (man-in-the-middle type attack).
+	\item And that's it. I can't think of any other issues.
+\end{enumerate}
+% I AM A PINK PONY
+% A BIG FAT PHONY
+% SEE THE CAVEAT OF MY CALZONE
+% FEMALES BE TRIPPIN AND I'M LIKE YEAH THAT'S ON ME
 
-%TODO: write about HMAC and digital signatures or whatever it's called
+% jobbe deg oppover mot sluttresultatet
 
-%TODO: write about the PKI infrastructure
+\subsection{Communication}
+Communication between the server and clients is happens over HTTP.
+HTTP is like, a protocol for transfering text.
+\emph{Hyper}-text.
+This is well, done un-encrypted.
+So we use HTTPS instead which is like HTTP except with end-to-end encryption by virtue of being layered on top of SSL/TLS.
+This delegates the burden of securing our system's communication to someone else, and should prevent potential attackers from eavesdropping on our system.
+%TODO: find reference for SSL/TLS Certificate thing type deal
+%TODO: find a paper or whatever (RFC?) on HTTPS and SSL/TLS
 
-%TODO: find references and put them into the bibtex
+\subsection{Identity}
+The use of HTTPS requires a digital certificate. %TODO: REF to something about certificates 
+This makes it difficult for potential attackers to masquerade as the service, even if they somehow manage to take control of its domain.
+An attacker might want to do so in order to feed the users' faulty sensor readings or to capture user credentials.
+
+\subsection{Access restriction}
+%TODO: Access Control Lists, mention theoretical implementation
+
+\subsection{User identification}
+Users register for the service and leave a public key on the server along with a username and password.
+The username and password are used to authenticate to gain access to the web interface and to make changes to one's account and registered agents.
+
+When users send a command to the server they sign the command using their private key and attach the signature to the message along with their user ID.
+The signature is verified using the public key belonging to the given user ID when the message arrives at the server.
+This allows the server to verify that the command was issued by the given user, and that said user is allowed to execute the commands.
+Because of HTTPS, it is non-trivial to intercept the commands. 
+
+%TODO: write about digital signatures and stuff?
+
+%TODO: make a graph or overview of the message structure. Should probably put it somewhere else.
 
