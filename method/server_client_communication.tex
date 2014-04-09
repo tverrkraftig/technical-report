@@ -1,71 +1,22 @@
 \section{Vehicle-server communication}
-The vehicle needs a solid way of communicating with the server and other devices. We chose to use a server which hosts a rest API to acvhieve this. 
+The vehicle needs a solid way of communicating with the server and other devices. We chose to use a server which hosts a rest API to achieve this. A rest API uses HTTP requests to communicate text strings in JSON format. This API is described in greater detail in the server section of this report. The vehicle part of the communication was written in C++ to ensure compability with the other modules. The following libraries were used
 \begin{itemize}
-    \item Raspberry Pi
-    \item Dynamixel servomotors
-    \item USB2Dynamixel
-    \item Dynamixel SDK
+    \item Jansson - A library for processing JSON objects in C
+    \item Curl - A library for making HTTP calls in C
 \end{itemize}
-\vspace{\secspace}
 
-\textbf{Rasppberry Pi} (Pi) is a small single board computer. 
-It has two USB inputs, ethernet, HDMI and gpio pins. 
-This makes it the perfect prototyping computer for this kind of projects. 
-The Pi is running its operating system from a SD card, and the OS is RaspBian which is a debian based linux distro. 
-To controll the Pi a regular laptis is used. 
-This is achieved by using a SSH server on the Pi and a SSH client on the computer. 
-SSH (Secure SHell) is a protocol that allows one computer to remotely controll another via command line. 
-\vspace{\secspace}
+\subsection{Sending and receiving commands}
+Any client using this C++ framework for server communication can both receive commands from the server, and send commands to other client.
+Commands are sent using the \textit{json_send_command} function. It takes a command string as input, as well as the receiving client id for the command.
+The \textit{json_get_commands} function provides a vector of command strings. It contains all the commands that were sent to your client id since the last time this function was called. 
+It is up to the user to iterate trough this vector and extract the command strings, as well as perform action based on the commands received. 
+We use commands like ''forward'',''backward'',''turn_left'' and ''stop''. It is up to the user what the various commands are, but both endpoints of communication must agree upon which commands are used. The server will be ''stupid'' in this regard, as it only stores and send information when requested.
 
-\textbf{Dynamixel servomotors}\footnote{\url{http://www.robotis.com/xe/dynamixel_en}} are motors that allows for precise controll of angle and velocity. 
-These motors are controlled by three wires, power, gnd and signal. WRITE SOME MORE HERE!
-\vspace{\secspace}
+\subsection{Sending and receiving sensor data}
+Sensor data is sent and received in the very similar fashion as commands.
+The vehicle code must construct a table of sensors and their associated sensor values. 
+In practice this table is a c++ map. 
+The vehicle passes this map into the \texit{json_send_data} function, which then constructs a json object containing all the data arranged in a predermined structure. 
+The json object is sent to the server using its REST API.
+When a client wishes to get the latest sensor data from the vehicle, it simply calls the \textit{json_get_data} function. It must specify which vehicle it want to receive data from. The function return a map of sensors to the client, identical to the one the vehicle uploaded.
 
-\textbf{USB2Dynamixel} is a USB device that allows easy controll of dynamixel servo motors. 
-This USB requires no driver installation when running linux, and since RaspBian is a linux distro this simplifies things. 
-The USB2Dynamixel is inserted into one of the USB ports on the Pi and the servor motors are connected to the device. 
-\vspace{\secspace}
-
-\textbf{Dynamixel SDK}\footnote{\url{http://support.robotis.com/en/software/dynamixelsdk.htm}} is a programming library for controlling dynamixel servo motors. 
-This library is available for Windows, Mac and Linux and easy to run on the Pi. 
-Since the library is written in C it is easy to use it in this C++ project. 
-
-\subsection{Wiggle It}
-The first step is to make a servo motor move. 
-Since the USB device is linux compatible and the library also works in linux the Pi was used from the begining of the project. 
-\begin{figure}[H]
-    \centering
-    %sett inn figure her
-    \caption{fig:1servo}
-    \label{Servo motor test setup} 
-\end{figure}
-
-To make the servo motor move an example c-file form the library was used\footnote{LOCATION TO EXAMPLE FILE}. 
-For this to work there are som important parameters which should be known:
-\begin{itemize}
-     \item ID - Each motor has its own ID. This way its possible to control which motor that should get the command. 
-     \item Port - Which port the USB2Dynamixel is connected to. This is used to set up the communication to the motors. 
-     \item Mode - The servo motors can run in two different modes. Endless turn (like a wheel) and start2stop (from start position to specified position). 
-\end{itemize}
-\vspace{\secspace}
-
-The servo motors used for this test had IDs 7 and 12, and can be found on the side of the servo. 
-In linux the USB device can be found under /dev/usb, and using the Pi this device was /dev/usb0. 
-By replacing this parameters in the example file two servos was wiggled. 
-
-
-\subsection{Driving}
-The next step is to make four wheels cooperate! 
-
-
-\subsection{Future problems/challenges}
-What happens if some of the wheels is disconnected? 
-The answer for this question will not be covered in this report because of the timeframe, but it is an important issue that has to be resolved. 
-The optimal solution is to find an algorithm that calculates the speed that the remaining wheels, so that the vehicle can obtain normal function even in failsafe mode. 
-This will most likely depend on the surface under the vehicle. 
-
-
-%%% Local Variables: 
-%%% mode: latex
-%%% TeX-master: "../report"
-%%% End: 
