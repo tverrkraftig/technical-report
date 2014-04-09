@@ -1,0 +1,72 @@
+\section{Security}
+Concerns related to security were, as they typically are in this day and age, a thing.
+Several issues arise as the platform allows users to control agents by issuing commands through a publicly available API, namely:
+
+% Agent = active/connected robot/entity/thing
+% user = bruker ja, ok?
+% user client = bruker som tar i bruk webgrensesnittet
+% server = serveren
+% client = både agenter og user clients
+\begin{enumerate}
+	\item Restricting the execution of commands.
+	\item Preventing replay of commands (replay attacks).
+	\item Preventing others from masquerading as the server and spreading misinformation (man-in-the-middle type attacks).
+\end{enumerate}
+% jobbe deg oppover mot sluttresultatet
+
+\subsection{Communication}
+The server and clients communicate over the Hypertext Transfer Protocol layered on top of the SSL/TSL protocol. %TODO: insert reference to HTTPS/SSL/TLS
+This is commonly known as ``HTTPS''.
+The API server enforces the use of HTTPS and refuses to serve requests over regular HTTP.
+This means that all communication between the server and clients is encrypted, which prevents attackers from eavesdropping on the communication.
+
+
+
+While these guarantees of security 
+All these ``security guarantees'' depend on the various  
+Barring weaknesses or exploits in HTTPS or any of the underlying protocols or infrastructure
+
+%TODO: find reference for SSL/TLS Certificate thing type deal
+%TODO: find a paper or whatever (RFC?) on HTTPS and SSL/TLS
+
+\subsection{Identity}
+In HTTPS, X.509 certificates are employed to guarantee the identity of the server.
+%TODO: Insert reference to x.509 certificates
+This prevents attackers from trivially impersonating the server.
+An attacker might want to impersonate the server in order to serve users faulty sensor data or collect a large amount of cipher texts in order to exploit a potential weakness in the signature scheme in the hopes of obtaining a user's private key.
+
+\subsection{Access restriction}
+Access Control Lists, in addition to a user registration system, could be used to restrict access to certain commands.
+There would be an access control list for each agent registered in the system, and its owner(s) would be able to edit it in order to grant or deny other users access to the agents' functions.
+Users could either be explicitly granted access rights or denied them.
+
+This would, coupled with a method of identifying the user from which a request originated from, prevent un-authorized execution of commands to the agents.
+At least in theory, given that the access control lists are properly maintained by the agents' owners.
+An example of ``improper maintenance'' could be that the owners, wishing that no one besides themselves be allowed to issue commands to their agents, explicitly deny access to each and every other registered user while neglecting to deny access to non-users (i.e. non-registered users, the general public).
+
+%TODO: reference ACL
+%https://www.cs.cornell.edu/courses/cs513/2007fa/NL.accessControl.html
+
+\subsection{User identification}
+To identify users one could require them to register themselves with an unique username or ID on a website, and further require that they submit a public key.
+Users wanting to access restricted commands or API-calls would then sign their requests using their private key and submit their unique username or ID along with the request.
+The username or ID would be used to identify the user's public key, which would be used to verify the signature attached to the request.
+
+% refere til github sin implementasjon av dette?
+
+% kanskje et avsnitt om PKI?
+% Herp derp users can be required to leave a public key on our servers and to sign any commands or API-calls that are access restricted with their private key
+% we can then use their public key to verify that the request was sent by given user 
+
+\subsection{Other security related issues}
+While our system can claim certain to possess certain security guarantees, these are in effect by the virtue of the underlying implementations.
+Even if the underlying mathematics of whatever encryption or security protocol has been proven to be secure, faults or exploits could be found in the implementations.
+
+For example, on the 7th of April 2014, a vulnerability in several newer versions of OpenSSL was made public.
+%TODO: reference http://www.openssl.org/news/secadv_20140407.txt
+This vulnerability, nicknamed ``Heartbleed'', allowed remote attackers to obtain sensitive information (e.g. the server's private key) from web servers running the affected versions of OpenSSL.
+%TODO: Reference to http://heartbleed.com/
+This is an example of an implementation vulnerability.
+Even if the theory is sound, the implementation might not be.
+There is little possibility of safeguarding entirely against such eventualities -- even if one uses the more stable and secure versions of a program or software, there might exist vulnerabilities unknown to the public.
+%TODO: reference to OpenSSL

@@ -1,6 +1,6 @@
 
 \documentclass[svgnames, 11pt]{report}
-
+ 
 \usepackage[left=2.5cm, right=2.5cm]{geometry}   % set margins
 \usepackage[utf8]{inputenc}                      % set input encoding to utf8
 \usepackage{tikz}                                % tikz drawing library
@@ -28,7 +28,7 @@
   {\begin{tikzpicture}[remember picture,overlay]
     \node[yshift=-3.0cm, xshift=1.1cm] at (current page.north west)
       {\begin{tikzpicture}[remember picture, overlay]
-        \draw[top color=red, bottom color=DarkRed, blur shadow] (0,0) rectangle
+        \draw[top color=Blue, bottom color=DarkBlue, blur shadow] (0,0) rectangle
               (2cm,3cm);
         \node[yshift=0.7cm, xshift=1cm, scale=2]
               {\color{white}
@@ -46,7 +46,7 @@
 % Define section style
 \titleformat{\section}[block]
   {\huge\bfseries
-    \tikz[overlay] \shade[left color=DarkRed,right color=red, blur shadow] (0,-1ex) rectangle (\textwidth,1em);}%    
+    \tikz[overlay] \shade[left color=Blue,right color=DarkBlue, blur shadow] (0,-1ex) rectangle (\textwidth,1em);}%    
   {\color{white}\ \thesection}
   {1em}
   {\color{white}#1}
@@ -54,7 +54,7 @@
 % Define subsection style
 \titleformat{\subsection}[block]%
   {\LARGE\bfseries
-    \tikz[overlay] \shade[left color=DarkRed,right color=red, blur shadow] (0,-1ex) rectangle (\textwidth,1em);}%    
+    \tikz[overlay] \shade[left color=Blue,right color=DarkBlue, blur shadow] (0,-1ex) rectangle (\textwidth,1em);}%    
   {\color{white}\ \thesubsection}
   {1em}
   {\color{white} #1}
