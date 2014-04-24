@@ -1,11 +1,21 @@
 \chapter{Introduction}
-Introduction goes here...
-% TODO: write an introduction
+%TODO: Noen andre enn Odd må gå gjennom dette.
+Our group was assigned to the EiT Instrumentering og Styring over nett village, which has a focus on remote control over the internet.
+%TODO: sjekk engelsk stavemåte av EiT og landsbynavn
+We decided to build a platform to facilitate the communication between operators and the devices they wish to remote control over the internet.
+The platform should be modular in order to more easily allow the adding of functionality to meet domain specific requirements.
+It should also meet typical security requirements: Eavesdropping on the communication should not be possible and some secure authorization scheme should be supported in order to restrict access to devices connected to the platform.
 
-% TODO: translate the following:
-Problemstillingen vår lyder som følger:
-Lage en plattform som legger til rette for instrumentering og styring over internett. Plattformen skal være modulbasert slik at den er enkel å utvide til forskjellige  bruksområder. Det er også strenge krav til sikkerhet slik at uvedkommende ikke kan lese data eller sende styresignaler. 
-Ulike redningstjenester opplever stadig situasjoner der det kan være vanskelig å bedømme hvor trygt det er for folk å gå inn ulike steder. Eksempler på dette er brennende hus der husets stand er ukjent, eller om det er uvisst om folk befinner seg der inne. Et annet eksempel er utforskning av grotter enten på land eller under vann. Skulle det skje noe med en dykker er redningsoppdraget vanskelig og tidkrevende (http://www.ranablad.no/nyheter/article7154581.ece). Til tross for at transmissionsmediumet er helt forskjellig under vann og i luft vil det være enkelt å utvide/forandre et slikt system.
-I dag finnes det løsninger som funker bra i de forskjellige spesifikke scenariene, men det er ingen universell plattform som benyttes for alle løsningene. Ved hjelp av en slik plattform som er lett å utvide kan man få utviklet bedre og sikrere verktøy for slike situasjoner. Det er viktig at en slik plattform er stabil og driftsikker, derfor vil det være hensiktsmessig med kun en plattform som selv tilpasser seg til de sensorene/motorene som er koblet på. Slik vil vedlikehold av systemene holdes til et minimum. 
-System skal i all hovedsak gå over internett. Dette kan være over vanlig WLAN eller 3G. Fordelen med et slikt system som går over internett er at man da kan bruke det uansett rekkevidde. En uavhengig enhet vil kunne styres fra hvor som helst i verden, når som helst. Slik kan også eksperter fra andre steder i verden hjelpe til med å vurdere en kritisk situasjon f.eks her i Norge. 
+Various rescue services often encounter situations where assertaining the risk of entering a location is difficult. A burning house is an example of this, especially if the only information available is what the eye can see and one does not know if there are people trapped inside or not.
+Another example of such a situation is cave exploration, both above and under water.
+Rescuing divers is both difficult and time-consuming.  %TODO: insert reference to  http://www.ranablad.no/nyheter/article7154581.ece
+A remote controlled device (e.g. such as a wheeled robot) could be sent instead of a live human, reducing the risk of loss of life.
+While various systems exist that are designed to serve the purpose of rescue operators' ``eyes and ears'', these are typically domain or application specific.
+If the same communication platform could be used for any given scenario, one forces the developers to modularize their systems, potentially resulting in an increase of re-usability.
 
+The system will communicate over HTTP, with the possible messages specified by an API.
+This means users will be able to access the system through a regular web browser when connected to a WLAN or 3G network.
+In theory the platform will allow any internet capable device connected to the internet to be remote controlled by anyone with an internet connection anywhere in the world.
+
+We also showcase the feasibility of such a system by using it to remote control a robot with four wheels and a three-jointed grabber.
+The development of this robot and the software required to control it through the system is also detailed.
