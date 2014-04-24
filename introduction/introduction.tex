@@ -1,8 +1,10 @@
 \chapter{Introduction}
+%TODO: Hva er problemstillingen vår?
 %TODO: Noen andre enn Odd må gå gjennom dette.
 Our group was assigned to the EiT Instrumentering og Styring over nett village, which has a focus on remote control over the internet.
 %TODO: sjekk engelsk stavemåte av EiT og landsbynavn
 We decided to build a platform to facilitate the communication between operators and the devices they wish to remote control over the internet.
+Devices connected to the platform should have their functionality, available commands and sensory readings made available to authorized users through the platform.
 The platform should be modular in order to more easily allow the adding of functionality to meet domain specific requirements.
 It should also meet typical security requirements: Eavesdropping on the communication should not be possible and some secure authorization scheme should be supported in order to restrict access to devices connected to the platform.
 
@@ -12,6 +14,8 @@ Rescuing divers is both difficult and time-consuming.  %TODO: insert reference t
 A remote controlled device (e.g. such as a wheeled robot) could be sent instead of a live human, reducing the risk of loss of life.
 While various systems exist that are designed to serve the purpose of rescue operators' ``eyes and ears'', these are typically domain or application specific.
 If the same communication platform could be used for any given scenario, one forces the developers to modularize their systems, potentially resulting in an increase of re-usability.
+
+%TODO: something about hobbyists and enthusiasts using the platform for their devices as a hosting service or whatever?
 
 The system will communicate over HTTP, with the possible messages specified by an API.
 This means users will be able to access the system through a regular web browser when connected to a WLAN or 3G network.
