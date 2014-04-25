@@ -69,11 +69,16 @@ There is also a page describing platform porting \footnote{\url{http://support.r
 
 \subsection{The overall system}
 
-nice drawing
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.7\textwidth]{graphics/Robot_class_diagram.png}	
+    \caption{Robot overall system}
+    \label{fig:Class_diagram}
+\end{figure}
 
-communication (because of threads)
+This is how the overall system was made. It was our intention to make the system module based, such that it is easy to develop more things using the same modules. To make the modules we implemented classes in c++. That way you can make several motor, sensor, car or manipulator objects. 
 
-easy to develop further
+The communication module was added because we used threads in our program. Since there are only one data-bus and therefore it can only be accessed by one thread, we had to implement \textit{Mutexes} such that only one thread can access the communication functions available in the dynamixel library at the time. \textit{Mutexes} are "locks" that protect such code blocks that can only be accessed by one at the time.
 
 \subsection{Wiggle It}
 
@@ -100,12 +105,18 @@ By replacing these parameters in the example file the servos should move back an
 
 \subsection{Driving}
 The next step is to make four wheels cooperate!
+This was implemented in the class Car. Four servomotors are mounted under the base of the robot. The two motors on the right turns the same way and the two on the left turns the other way. When creating a car object all you have to do is write the IDs of the wheels. The motors are initialized in endless turn mode when the car object is created. There was functions for setting speed and turning the car both when the car is driving and when it had stopped. Turning the car was accomplished by setting the two right wheels one way, and the two left wheels the other way when the car had stopped. When the car was moving only one side was set to a lower speed to make the car turn while moving.
 
-endless turn
 
-setting speed
+\begin{figure}[H]
+    \centering
+    %sett inn figure her
+    \caption{car overview}
+    \label{fig:car} 
+\end{figure}
 
-turning 
+
+In the example directory is an example program which demonstrates the car driving forward, backward and turning to left and right. The only thing needed are the IDs of the wheels. You can still use the pingAll() to check for IDs on the data-bus.
 
 \subsection{Manipulator}
 
