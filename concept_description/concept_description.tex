@@ -4,7 +4,8 @@ Agents connect to the platform through which their sensory information, availabl
 Use of the platform increases the possible simultaneous audience of a connected agent, as users do not have to query the agent directly for the information. 
 Agents actively query the platform to obtain commands from users.
 In the same manner, users must actively query the platform to obtain new information from or about the agents.
-See Figure \ref{fig:system-overview} for an illustration of how the communication between the platform and connected entities.
+The frequency of such queries are decided by the specific client.
+See Figure \ref{fig:system-overview} for an illustration of the flow of information between the platform and connected entities.
 
 \begin{figure}[H]
 \begin{center}
@@ -14,9 +15,14 @@ See Figure \ref{fig:system-overview} for an illustration of how the communicatio
 \end{center}
 \end{figure}
 
-%TODO: flesh out the concept description.
-% I think it's a description of the concept
-% where "the concept" is what we are doing/trying to do/have done/want to do/the project
+The platform itself only responds to queries from connected entities and performs user identification and authentication if needed.
+When a user sends a command to an agent, the command is received by the server and is stored away until the agent queries the platform for commands directed at it.
+When an agent uploads its sensor data or whatever other information this is stored on the platform and users must actively query the platform for it.
+
+Agents and users access the platform through a client, which is a piece of software that communicates with the platform.
+On the user side, the client communicates with the platform through API calls and presents the information it receives to the user.
+On the agent side, the client communicates with the platform through API calls, and translates (if required) and passes this information on to the device that is to be remote controlled.
+Clients are not a part of the platform itself, and the only requirement is that they are able to communicate with the platform through the API.
 
 \section{Terminology}
 \input{concept_description/terminology.tex}
