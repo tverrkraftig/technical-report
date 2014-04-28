@@ -11,7 +11,7 @@ The following was used to make this vehicle:
 \end{itemize}
 \vspace{\secspace}
 
-\textbf{Rasppberry Pi} (Pi) is a single board credit-card-sized computer. It runs on an 700 MHz ARM processor.
+\textbf{Raspberry Pi} (Pi) is a single board credit-card-sized computer. It runs on an 700 MHz ARM processor.
 It has two USB inputs, ethernet, HDMI and gpio (general purpose input output) headers. 
 This makes it the perfect prototyping computer for this kind of project. 
 The Pi is running its operating system from a SD card, and the OS is RaspBian which is a debian based linux distro.
@@ -36,6 +36,8 @@ We had to set up a own network to do this, because the eduroam network uses diff
 \vspace{\secspace}
 
 \textbf{Raspberry Pi camera}
+
+Sven: si noe om kamera, og hvorfor det er så bra at det ikke går på usb, nevn litt om seriell kommunikasjon i samme slengen.
 
 \vspace{\secspace}
 
@@ -130,10 +132,11 @@ A manipulator was added to be able to pick up things and look around with the ca
 \end{figure}
 
 The class Manipulator implements the arm and the gripper.
-\newline
+
+\vspace{\secspace}
 
 \textbf{Arm}
-\newline
+
 The angles of the servomotors in the arm can be set directly by using the function setAngles($\theta_{1}$, $\theta_{2}$, $\theta_{3}$), or you can set the desired position in x, y and z, by using the function goToPosition(x,y,z). This function make use of inverse kinematic, with a geometric approach. 
 The problem can be split up in to calculations, the calculation of $\theta_{2}$ and $\theta_{3}$, and the calculation of $\theta_{1}$. To calculate $\theta_{2}$ and $\theta_{3}$ we use the law of cosines.
 
@@ -183,10 +186,11 @@ The calculation of $\theta_{1}$ was simple.
 $$\theta_{1} = \arctan(\frac{x_{c}}{y_{c}})$$
 
 Since the servomotors only can move inside 0-300 degrees, the code had to include saturation limits on the angles, and will an error code if these limits are reached.
-\newline
+
+\vspace{\secspace}
 
 \textbf{Gripper}
-\newline
+
 The gripper used to servomotors on the end of the arm. The main problem with the gripper was to make it stop when it noticed it couldn't move further, and therefore not squeezing the object it had to grip. This was done by first setting the zero position where the two parts of the gripper could touch, and setting this as the first goal position. Then it had to read the position continuous until it noticed that it had reach the max number of consecutive reads. When this number was reached, the motors would stop ensuring that the object would not be destroyed.
 
 \begin{figure}[H]
@@ -196,15 +200,21 @@ The gripper used to servomotors on the end of the arm. The main problem with the
     \label{fig:gripper} 
 \end{figure}
 
+\vspace{\secspace}
+
 \textbf{Example}
-\newline
+
 The example file creates a manipulator with some given IDs and makes it move in y and z direction using inverse kinematic. It also demonstrates the gripper. The only thing needed are the IDs of the wheels. You can still use the pingAll() to check for IDs on the data-bus.
 
 \subsection{Testing it all with a local interface}
 
-mouse and keyboard input
+One important feature of all system is to be able to test things at different levels. All of the modules are supplied with example-code testing the most basic functions. We thought that it would be nice to test all of the modules together without going through the internet. Then we wouldn't have problems of latency for example. 
 
-x11/xming
+The interface example program creates a window on the pi by using the X Window System. The window can detect mouse and keyboard input. To see the window you could hook up a monitor to the pi or you could use a program such as \textit{Xming}\footnote{\url{http://www.straightrunning.com/XmingNotes/}} which make it possible to open windows on the Raspberry Pi through the SSH connection. Explanation on how to do this is also explained here \footnote{\url{http://pihw.wordpress.com/guides/direct-network-connection/}} under step 3.
+
+In the window that the program creates you could move the manipulator in the X-Y-plane by pushing the left mouse button and moving the mouse around. You can move up and down in z-direction by scrolling the wheel, and grab things with the gripper by pushing right mouse button. With w,s,a,d buttons you can drive  around.
+
+The interface was very useful when debugging the hole program of the robot without the need of internet. Many problems arose due to the fact that there was much more communication on the bus, and due to other stress on the system. Also it was very pleasing to drive around and pick up things. 
 
 \subsection{Sensor}
 
@@ -212,24 +222,29 @@ The use of the AX-S1 Integrated Sensor was realized by the Sensor class. Here ar
 
 The sensor can also play sound, either from its internal memory or by sending notes and how long it should play that note to it. In the datasheet is a table of notes and corresponding values. There are one function for each of these modes. The latter function takes in a array of notes and length of each note.
 
-In the main program, thread --
-
 \subsection{Exception handling}
 
-failsafe mode
+Another important feature of the setup of the robot is exception handling. We discovered that we often got error in communication when using the Dynamixel library. So we decided that there should be some kind of exception handling when the robot looses one of its motors or sensors. When one motor is lost it throws an exception with information on what went wrong and which motor it was. The exception can then be caught in the Car or Manipulator class and set the object in \textit{fail-safe} mode. When entering \textit{fail-safe} mode a thread is created that ping all the motors in the object regularly. This way the program will discover automatically when the object has recovered and set it in \textit{idle} mode again. One other way to do this would be to ping all the motors regularly and then also automatically discover when motors become unreachable. But this would make the data bus even more busy in \textit{idle} mode which may be undesirable and may cause more communication error.
 
-ping
+When in \textit{fail-safe} mode the manipulator or car object disables all its functions. This way you can not for example drive the car if one wheel is lost, which would result in the car not driving straight forward. We thought about having a how we could operate the car when one wheel was gone. For example could we disable only the back wheels if just one of the back wheels was lost. We tried this and discovered that it was to much friction in the two wheels that the car wouldn't move at all, or not move in a straight line. Therefore we didn't choose this approach. 
 
-threads
-
-tried some wheels
+For future work one could also think about how to implement a mode for operating the manipulator with one or more of the servomotors lost.
 
 \subsection{Future problems/challenges}
-What happens if some of the wheels is disconnected? 
-The answer for this question will not be covered in this report because of the timeframe, but it is an important issue that has to be resolved. 
-The optimal solution is to find an algorithm that calculates the speed that the remaining wheels, so that the vehicle can obtain normal function even in failsafe mode. 
-This will most likely depend on the surface under the vehicle. 
 
+As said in the last section future problems could be to implement a better \textit{fail-safe} mode where you could operate the car or manipulator even though one of the servomotors is lost.
+
+\vspace{\secspace}
+Another problem with the code that we discovered is the use of threads together with the use of the Dynamixel library. To ensure that multiple threads wasn't speaking on the data bus at the same time, we had to introduce mutexes for the send and receive functions. The problem was with a the timeout in the Dynamixel library functions. If to long time pass before the functions receive something back on the bus, the functions would give an error back with the error command \textit{RXTIMEOUT}. The problem then arose if one thread sends something on the data bus waiting for a response, another thread takes over and when the thread that was sending come back again it has gone to long time, and it issues an error. This could be done by increasing the timeout in the Dynamixel function, which requires some knowledge on how the library works. 
+A more elegant way is to make the communication functions \textit{atomic}, which would mean that no other thread could interrupt that thread when executing this line of code. %is this right?
+
+\vspace{\secspace}
+The robot could be battery operated. Because the battery was quite dead we had to connect it to a power adapter. Also the Raspberry Pi was connected to the wall through an AC/DC adapter. With a better battery one could make a circuit that also supplied the Pi through the battery, making the robot cordless.
+
+
+%more:
+%main program thread sensor
+%putting it all together main program in result?
 
 %%% Local Variables: 
 %%% mode: latex
