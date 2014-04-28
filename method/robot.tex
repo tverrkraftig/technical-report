@@ -120,9 +120,85 @@ In the example directory is an example program which demonstrates the car drivin
 
 \subsection{Manipulator}
 
-inverse kinematic (drawing)
+A manipulator was added to be able to pick up things and look around with the camera. The manipulator use three servomotors in the arm, and two in the gripper. The setup was like in the drawing below.
 
-gripper
+\begin{figure}[H]
+    \centering
+    %sett inn figure her
+    \caption{manipulator overview}
+    \label{fig:manipulator} 
+\end{figure}
+
+The class Manipulator implements the arm and the gripper.
+\newline
+
+\textbf{Arm}
+\newline
+The angles of the servomotors in the arm can be set directly by using the function setAngles($\theta_{1}$, $\theta_{2}$, $\theta_{3}$), or you can set the desired position in x, y and z, by using the function goToPosition(x,y,z). This function make use of inverse kinematic, with a geometric approach. 
+The problem can be split up in to calculations, the calculation of $\theta_{2}$ and $\theta_{3}$, and the calculation of $\theta_{1}$. To calculate $\theta_{2}$ and $\theta_{3}$ we use the law of cosines.
+
+\begin{figure}[H]
+    \centering
+    %sett inn figure her
+    \caption{manipulator from the side}
+    \label{fig:manipulator_side} 
+\end{figure}
+
+\begin{displaymath}
+\begin{split}
+-2d_{2}d_{3}\cos(\pi - \theta_{3}) = z_{c}^2 + r^2 - d_{2}^2 - d_{3}^2\\
+r^2 = x_{c}^2 + y_{c}^2\\
+\cos(\theta_{3}) = \frac{z_{c}^2 + x_{c}^2 + y_{c}^2 - d_{2}^2 - d_{3}^2}{2d_{2}d_{3}} = D\\
+\sin(\theta_{3}) = \pm\sqrt{1-D^2}\\
+\theta_{3} = \arctan(\frac{\pm\sqrt{1-D^2}}{D})
+\end{split}
+\end{displaymath}
+
+\begin{figure}[H]
+    \centering
+    %sett inn figure her
+    \caption{manipulator from the side}
+    \label{fig:manipulator_side2} 
+\end{figure}
+
+\begin{displaymath}
+\begin{split}
+\theta_{2} = \frac{\pi}{2} - \alpha - \phi\\
+\theta_{2} = \frac{\pi}{2} - \arctan(\frac{d_{3}\sin(\theta_{3})}{d_{2}+d_{3}\cos(\theta_{3})}) - \arctan(\frac{z_{c}}{r})
+\end{split}
+\end{displaymath}
+
+Hence there are two solutions to the equation of $\theta_{3}$, one where $\theta_{3}$ is negative and one where $\theta_{3}$ is positive. The two solutions are called \textit{elbow up} and \textit{elbow down}. We chose the \textit{elbow up} solution because this would lead to less crashing with objects on the ground.
+The length $d_{2}$ and $d_{3}$ had to be measured in mm and set in the code.
+
+\begin{figure}[H]
+    \centering
+    %sett inn figure her
+    \caption{manipulator from the top}
+    \label{fig:manipulator_top} 
+\end{figure}
+
+The calculation of $\theta_{1}$ was simple.
+
+$$\theta_{1} = \arctan(\frac{x_{c}}{y_{c}})$$
+
+Since the servomotors only can move inside 0-300 degrees, the code had to include saturation limits on the angles, and will an error code if these limits are reached.
+\newline
+
+\textbf{Gripper}
+\newline
+The gripper used to servomotors on the end of the arm. The main problem with the gripper was to make it stop when it noticed it couldn't move further, and therefore not squeezing the object it had to grip. This was done by first setting the zero position where the two parts of the gripper could touch, and setting this as the first goal position. Then it had to read the position continuous until it noticed that it had reach the max number of consecutive reads. When this number was reached, the motors would stop ensuring that the object would not be destroyed.
+
+\begin{figure}[H]
+    \centering
+    %sett inn figure her
+    \caption{Gripper}
+    \label{fig:gripper} 
+\end{figure}
+
+\textbf{Example}
+\newline
+The example file creates a manipulator with some given IDs and makes it move in y and z direction using inverse kinematic. It also demonstrates the gripper. The only thing needed are the IDs of the wheels. You can still use the pingAll() to check for IDs on the data-bus.
 
 \subsection{Testing it all with a local interface}
 
@@ -132,9 +208,11 @@ x11/xming
 
 \subsection{Sensor}
 
-make sound
+The use of the AX-S1 Integrated Sensor was realized by the Sensor class. Here are functions for calculating distance to objects using IR, functions for measuring light and functions for playing sound. Distance to objects are done by the sensor sending pulses with a IR-diode and measuring the strength of the IR returning. This way one can predict how close an object is (higher strength = close). 
 
-read ir
+The sensor can also play sound, either from its internal memory or by sending notes and how long it should play that note to it. In the datasheet is a table of notes and corresponding values. There are one function for each of these modes. The latter function takes in a array of notes and length of each note.
+
+In the main program, thread --
 
 \subsection{Exception handling}
 
