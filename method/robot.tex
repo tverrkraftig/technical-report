@@ -33,21 +33,20 @@ SSH (Secure SHell) is a protocol that allows one computer to remotely controll a
     wpa-psk "<networkPassword>"
 \end{verbatim}
 We had to set up a own network to do this, because the eduroam network uses different setup.
-\vspace{\secspace}
+\bigskip
 
 \textbf{Raspberry Pi camera}
 
 Sven: si noe om kamera, og hvorfor det er så bra at det ikke går på usb, nevn litt om seriell kommunikasjon i samme slengen.
-
-\vspace{\secspace}
+\bigskip
 
 \textbf{Dynamixel AX-12 servomotors}
 are motors that allows for precise controll of angle and velocity. These motors are controlled over a half duplex UART, which is a byte oriented asynchronous serial communication protocol. You can control the motors and receive feedback by sending commands to it corresponding to the control table in the datasheet [PUT REFZ H3R3]. The most important features is the control of position and velocity. The servos can work like normal servos where you can put in the desired position, and a controller inside the servo will make the servo go to that position. This position is limited to between 0-300 degrees (see datasheet). The servo can also work in so called "Endless Turn" mode, where the servos can spin infinite. Here you can only control the velocity which the motors run. "Endless Turn" mode is activated by setting the angle limits (CW Angle Limit and CCW Angle Limit) to zero.
-\vspace{\secspace}
+\bigskip
 
 \textbf{Dynamixel AX-S1 Integrated Sensor}
 is a sensor device capable of measuring sound, brightness, heat and distance to objects. It is also capable of making sound. The communication is the same as the servomotors and the sensor is connected to the same bus. 
-\vspace{\secspace}
+\bigskip
 
 \textbf{USB2Dynamixel} \footnote{\url{http://support.robotis.com/en/product/auxdevice/interface/usb2dxl_manual.htm}} is a USB device that allows the computer to create a virtual serial port (UART) and with some other circuitry, communicate with the servos over the USB port.
 This USB requires no driver installation when running linux, and since RaspBian is a linux distro this simplifies things. 
@@ -58,7 +57,7 @@ To do this we had to make the circuitry described on page 8 in the datasheet [PU
 We would also have to implement our own code for the lower part of the communication (where we used a library from the manufacturer, more on that later).
 UART is also widely supported by many lower end microcontrollers which don't have the support for an OS. 
 Therefore using UART would mean that the code would be even more platform independent.
-\vspace{\secspace}
+\bigskip
 
 \textbf{Dynamixel SDK} is a programming library for controlling dynamixel servo motors. 
 This library is available for Windows, Mac and Linux and easy to run on the Pi. 
@@ -88,7 +87,7 @@ The first step is to make a servo motor move.
 
 \begin{figure}[H]
     \centering
-    %sett inn figure her
+    %sett inn bilde av basic oppsett her
     \caption{Servo motor test setup}
     \label{fig:servo} 
 \end{figure}
@@ -100,7 +99,7 @@ For this to work there are some important parameters which should be known:
      \item Port - Which port the USB2Dynamixel is connected to. This is used to set up the communication to the motors. USB devices under linux can be found under \textit{/dev/usb}. When testing we used deviceIndex = 0 (\textit{/dev/usb0}).
      \item Baudnumber - used to set the speed of the bus. This should always be one, which is 1Mbit/s, unless lower speeds are needed.
 \end{itemize}
-\vspace{\secspace}
+\bigskip
 
 By replacing these parameters in the example file the servos should move back and forth when enter is pressed.
 
@@ -112,7 +111,7 @@ This was implemented in the class Car. Four servomotors are mounted under the ba
 
 \begin{figure}[H]
     \centering
-    %sett inn figure her
+    %sett inn bilde av undersiden av bilen her
     \caption{car overview}
     \label{fig:car} 
 \end{figure}
@@ -132,8 +131,7 @@ A manipulator was added to be able to pick up things and look around with the ca
 \end{figure}
 
 The class Manipulator implements the arm and the gripper.
-
-\vspace{\secspace}
+\bigskip
 
 \textbf{Arm}
 
@@ -186,8 +184,7 @@ The calculation of $\theta_{1}$ was simple.
 $$\theta_{1} = \arctan(\frac{x_{c}}{y_{c}})$$
 
 Since the servomotors only can move inside 0-300 degrees, the code had to include saturation limits on the angles, and will an error code if these limits are reached.
-
-\vspace{\secspace}
+\bigskip
 
 \textbf{Gripper}
 
@@ -195,12 +192,12 @@ The gripper used to servomotors on the end of the arm. The main problem with the
 
 \begin{figure}[H]
     \centering
-    %sett inn figure her
+    %sett inn bilde av gripper her
     \caption{Gripper}
     \label{fig:gripper} 
 \end{figure}
 
-\vspace{\secspace}
+\bigskip
 
 \textbf{Example}
 
@@ -233,13 +230,13 @@ For future work one could also think about how to implement a mode for operating
 \subsection{Future problems/challenges}
 
 As said in the last section future problems could be to implement a better \textit{fail-safe} mode where you could operate the car or manipulator even though one of the servomotors is lost.
+\bigskip
 
-\vspace{\secspace}
 Another problem with the code that we discovered is the use of threads together with the use of the Dynamixel library. To ensure that multiple threads wasn't speaking on the data bus at the same time, we had to introduce mutexes for the send and receive functions. The problem was with a the timeout in the Dynamixel library functions. If to long time pass before the functions receive something back on the bus, the functions would give an error back with the error command \textit{RXTIMEOUT}. The problem then arose if one thread sends something on the data bus waiting for a response, another thread takes over and when the thread that was sending come back again it has gone to long time, and it issues an error. This could be done by increasing the timeout in the Dynamixel function, which requires some knowledge on how the library works. 
 A more elegant way is to make the communication functions \textit{atomic}, which would mean that no other thread could interrupt that thread when executing this line of code. %is this right?
+\bigskip
 
-\vspace{\secspace}
-The robot could be battery operated. Because the battery was quite dead we had to connect it to a power adapter. Also the Raspberry Pi was connected to the wall through an AC/DC adapter. With a better battery one could make a circuit that also supplied the Pi through the battery, making the robot cordless.
+The robot could be battery operated. Because the battery was quite dead we had to connect it to a power adapter. Also the Raspberry Pi was connected to the wall through an AC/DC adapter. With a better battery one could make a circuit that also supplied the Pi through the battery, making the robot all cordless.
 
 
 %more:
