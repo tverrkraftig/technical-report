@@ -9,40 +9,37 @@ Several issues arise as the platform allows users to control agents by issuing c
 	\item Uniquely identifying and authenticating users and agents.
 	\item Preventing attackers from eavesdropping on the communication.
 \end{enumerate}
-% jobbe deg oppover mot sluttresultatet
 
 \subsection{X.509 Certificate and HTTPS}
 % write about the certificate and http here?
-A X.509 certificate was installed on the server hosting the service.
+A X.509 certificate \citep[section 3.1]{rfca} was installed on the server hosting the service.
 %TODO: EMIL HVORDAN BLE DETTE GJORT?
-%TODO: insert reference to X.509 certificates --> http://tools.ietf.org/html/rfc5280#section-3.1
 These certificates are used in the SSL/TLS protocol as a proof of identity and to exchange the shared encryption key during the protocol's handshake.
 This allows users and agents to verify the identity of the service, however this must be done by the clients.
 This prevents attackers from trivially impersonating the service without access to its certificate.
 That is, the service can still be impersonated but it is possible for users to verify that they are communicating with the real service by attempting to verify the certificate presented to them as they access the service.
 An attacker might want to impersonate the server in order to serve users faulty sensor data or collect a large amount of cipher texts in order to exploit a potential weakness in the signature scheme in the hopes of obtaining a user's private key.
 
-The certificate also allows communication over HTTPS, which is like HTTP except that it has end-to-end encryption.
+The certificate also allows communication over HTTPS, which is like HTTP except that it has end-to-end encryption \citep{rfc-https}.
 This prevents attackers from eavesdropping on the communication between the platform and connected entities.
-%TODO: find reference for SSL/TLS Certificate thing type deal
-%TODO: find a paper or whatever (RFC?) on HTTPS and SSL/TLS
 
 \subsection{Identification and authentication}
 %TODO: Emil kan du gå over dette avsnittet og se om ordene er riktig?
-In order to identify an agent or user, it must be registered with the service.
-In practice this means that a public key must be coupled with an unique ID, both of which the service has access to.
+In order to be able to identify an agent or user, the agent or user must be registered with the service.
+For the service, this means that a public key must be coupled with an unique ID, both of which the service has access to.
 Users and agents use the private key associated with the deposited public key to produce a digital signature for the request.
 This is handled by the clients.
-The service, upon receiving the request, use the ID in the request to find the appropriate public key which is then used to verify the signature.
+The service, upon receiving the request, uses the ID in the request to find the appropriate public key which is then used to verify the signature.
 If the signature fails to validate (e.g. because the message has been tampered with) the request is discarded.
 If it passes validation it is processed.
-%TODO: reference to digital signatures and how they work
 
 This provides a method of both identifying and authenticating users and agents.
 Given that the signature algorithm is secure it can be assumed of a message containing a valid signature that it originated from someone with access to the private key matching the public key associated with the ID attached to the message.
 
+See \citet{signatures} for more information about digital signatures and their applications.
+
 \subsection{Access restriction}
-Access Control Lists, in addition to a user registration system, could be used to restrict access to certain commands.
+Access~Control~Lists~\citep[section 4.1, entry "access control list"]{rfc-acl}, in addition to a user registration system, could be used to restrict access to certain commands.
 There would be an access control list for each agent registered in the system, and its owner(s) would be able to edit it in order to grant or deny other users access to the agents' functions.
 Users could either be explicitly granted access rights or denied them.
 
@@ -50,8 +47,6 @@ This would, coupled with a method of identifying the user from which a request o
 At least in theory, given that the access control lists are properly maintained by the agents' owners.
 An example of ``improper maintenance'' could be that the owners, wishing that no one besides themselves be allowed to issue commands to their agents, explicitly deny access to each and every other registered user while neglecting to deny access to non-users (i.e. non-registered users, the general public).
 
-%TODO: reference ACL
-%https://www.cs.cornell.edu/courses/cs513/2007fa/NL.accessControl.html
 
 \subsection{Replay attacks}
 Exposure to replay attacks is mitigated when end-to-end encryption is used for communication, as attackers need to obtain a plaintext copy of a valid command in order to replay it.
@@ -65,10 +60,8 @@ If the hash of an incoming message matches one already executed in the past some
 While a system may claim certain to possess certain security guarantees, these are in effect by the virtue of the underlying implementations.
 Even if the underlying mathematics of whatever encryption or security protocol has been proven to be secure, faults or exploits could be found in the implementations.
 
-For example, on the 7th of April 2014, the existence of a vulnerability in several newer versions of OpenSSL was made public.
-%TODO: reference http://www.openssl.org/news/secadv_20140407.txt
-This vulnerability, nicknamed ``Heartbleed'', allowed remote attackers to obtain sensitive information (e.g. the server's private key) from web servers running the affected versions of OpenSSL.
-%TODO: Reference to http://heartbleed.com/
+For example, on the 7th of April 2014, the existence of a vulnerability in several newer versions of OpenSSL was made public (\citetitle{hb-openssl-news}).
+This vulnerability, nicknamed ``Heartbleed''~\citep{heartbleed}, allowed remote attackers to obtain sensitive information (e.g. the server's private key) from web servers running the affected versions of OpenSSL.
 This is an example of an implementation vulnerability: Even if the theory is sound, the implementation might not be.
 There is little possibility of safeguarding entirely against such eventualities -- even if one uses the more stable and secure versions of a program or software, there might exist vulnerabilities unknown to the public.
-%TODO: reference to OpenSSL
+
