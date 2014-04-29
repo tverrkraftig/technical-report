@@ -12,6 +12,11 @@
 \usepackage{graphicx}                            % used to include graphics
 \usepackage{amsmath}
 \usepackage{mathtools}
+\usepackage[english]{babel}                         % formats stuff (dates etc) like englishfolklike it.  See http://www.phys.ethz.ch/~ihn/latex/babel.pdf
+\usepackage[babel=once]{csquotes}                 % csquotes is recommended by biber for some reason
+\usepackage[citestyle=authoryear,natbib=true,backend=biber]{biblatex}  % biblatex package
+\addbibresource{references.bib}                   % add references.bib
+
 
 % Use tikx libraries
 \usetikzlibrary{shadows.blur}
