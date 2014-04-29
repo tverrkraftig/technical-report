@@ -8,7 +8,7 @@ all:
 
 .PHONY: clean
 clean:
-	rm -f *.aux *.toc *.log *.bbl *.blg
+	rm -f *.aux *.toc *.log *.bbl *.blg *.run.xml *.bcf
 
 .PHONY: err
 err:
