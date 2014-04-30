@@ -23,16 +23,16 @@ It has two USB inputs, Ethernet, HDMI and GPIO (General-Purpose Input/Output) he
 This makes it the perfect prototyping computer for this kind of project. 
 The Pi is running its operating system from a SD card, and the OS is RaspBian which is a debian based Linux distro.
 
-To control the Pi you can hook up a keyboard and a monitor directly to the board, or you can control it from another computer. 
+To control the Pi you can connect a keyboard and a monitor directly to the board, or you can control it from another computer. 
 This is achieved by using a SSH server on the Pi and a SSH client on the computer. 
-SSH (Secure SHell) is a protocol that allows one computer to remotely control another via command line. A widely known program for doing this is PuTTY. To login over SSH, you need to know the IP-address of the host. This can be done by setting the IP-address static or to scan the network to find out which IP the Pi would have. Since both of these approaches are difficult on a big network like NTNU, we had to find another approach. The solution was to connect the Pi directly to the computer via an Ethernet cable. To do this we had to do some modifications, the full tutorial on how to do this see \footnote{\url{http://pihw.wordpress.com/guides/direct-network-connection/}}. To get internet access we first shared the Wi-Fi connection on the computer described here \footnote{\url{http://anwaarullah.wordpress.com/2013/08/12/sharing-wifi-internet-connection-with-raspberry-pi-through-lanethernet-headless-mode/}}. Later we used a Wi-Fi USB dongle. The driver for this dongle installed automatically and all we had to do was to configure \textit{/etc/network/interfaces}, and add the following:
+SSH (Secure Shell) is a protocol that allows one computer to remotely control another via command line. A widely known program for doing this is PuTTY. To login over SSH, you need to know the IP-address of the host. This can be done by setting the IP-address static or to scan the network to find out which IP the Pi would have. Since both of these approaches are difficult on a big network like NTNU, we had to find another approach. The solution was to connect the Pi directly to the computer via an Ethernet cable. To do this we had to do some modifications, the full tutorial on how to do this see \citep{direct-Pi}. To get internet access we first shared the Wi-Fi connection on the computer described here \cite{network-Pi}. Later we used a Wi-Fi USB dongle. The driver for this dongle installed automatically and all we had to do was to configure \textit{/etc/network/interfaces}, and add the following:
 \begin{verbatim}
     auto wlan0
     iface wlan0 inet dhcp
     wpa-ssid "<nameOfNetwork>"
     wpa-psk "<networkPassword>"
 \end{verbatim}
-We had to set up a own network to do this, because the eduroam network uses different setup.
+We had to set up our own network to do this, because the Eduroam network uses different setup.
 \bigskip
 
 \textbf{Raspberry Pi camera Module} \footnote{\url{http://www.raspberrypi.org/product/camera-module/}}
@@ -50,7 +50,7 @@ Video from the camera could we then watch in the browser by entering the IP-addr
 \bigskip
 
 \textbf{Dynamixel AX-12 servomotors}
-are motors that allows for precise control of angle and velocity. These motors are controlled over a half duplex UART, which is a byte oriented asynchronous serial communication protocol. You can control the motors and receive feedback by sending commands to it corresponding to the control table in the datasheet [PUT REFZ H3R3]. The most important features is the control of position and velocity. The servos can work like normal servos where you can put in the desired position, and a controller inside the servo will make the servo go to that position. This position is limited to between 0-300 degrees (see datasheet). The servo can also work in so called "Endless Turn" mode, where the servos can spin infinite. Here you can only control the velocity which the motors run. "Endless Turn" mode is activated by setting the angle limits (CW Angle Limit and CCW Angle Limit) to zero.
+are motors that allows for precise control of angle and velocity. These motors are controlled over a half duplex UART, which is a byte oriented asynchronous serial communication protocol. You can control the motors and receive feedback by sending commands to it corresponding to the control table in the datasheet in appendix 5. The most important features is the control of position and velocity. The servos can work like normal servos where you can put in the desired position, and a controller inside the servo will make the servo go to that position. This position is limited to between 0-300 degrees (see datasheet). The servo can also work in so called "Endless Turn" mode, where the servos can spin infinite. Here you can only control the velocity which the motors run. "Endless Turn" mode is activated by setting the angle limits (CW Angle Limit and CCW Angle Limit) to zero.
 \bigskip
 
 \textbf{Dynamixel AX-S1 Integrated Sensor}
@@ -62,7 +62,7 @@ This USB requires no driver installation when running Linux, and since RaspBian 
 The USB2Dynamixel is inserted into one of the USB ports on the Pi and the servo motors are connected to the device.
 
 Since the Pi also has a hardware UART driver on two of its GPIO headers, we thought about if we could communicate with the servos through these pins. 
-To do this we had to make the circuitry described on page 8 in the datasheet [PUT REFZ H3R3]. 
+To do this we had to make the circuitry described on page 8 in the datasheet appendix 5. 
 We would also have to implement our own code for the lower part of the communication (where we used a library from the manufacturer, more on that later).
 UART is also widely supported by many lower end microcontrollers which don't have the support for an OS. 
 Therefore using UART would mean that the code would be even more platform independent.
@@ -71,7 +71,7 @@ Therefore using UART would mean that the code would be even more platform indepe
 \textbf{Dynamixel SDK} is a programming library for controlling dynamixel servo motors. 
 This library is available for Windows, Mac and Linux and easy to run on the Pi. 
 Since the library is written in C it is easy to use it in this C++ project.
-There is a great API reference \footnote{\url{http://support.robotis.com/en/software/dynamixelsdk.htm}} with the library.
+There is a great API reference \citep{dynamixel-API} with the library.
 The functions treat the lower part of the communication over USB2Dynamixel.
 There are functions for initializing the communication, terminate the communication, sending byte and words (16 bit), receiving byte and words, and for ping. Ping is for checking if a device is connected.
 There is also a page describing platform porting \footnote{\url{http://support.robotis.com/en/software/dynamixel_sdk/sourcestructure.htm}}
@@ -101,7 +101,7 @@ The first step is to make a servo motor move.
     \label{fig:servo} 
 \end{figure}
 
-To make the servo motor move the example-program for the motor class could be used \footnote{LOCATION TO MOTOR EXAMPLE PROGRAM}. Alternative the example-file readWrite form the dynamixel library could be used \footnote{LOCATION TO READWRITE EXAMPLE FILE}. 
+To make the servo motor move the example-program for the motor class could be used. Alternative the example-file readWrite form the dynamixel library could be used. 
 For this to work there are some important parameters which should be known:
 \begin{itemize}
      \item ID - Each motor has its own ID. This way its possible to control which motor that should get the command. The ID need to be change in the code to the ID of the motor. If the motor ID is unknown, you could use the \textit{pingAll()} function. This will search for IDs on the bus, and print out those that are active
@@ -145,7 +145,7 @@ The class Manipulator implements the arm and the gripper.
 \textbf{Arm}
 
 The angles of the servomotors in the arm can be set directly by using the function setAngles($\theta_{1}$, $\theta_{2}$, $\theta_{3}$), or you can set the desired position in x, y and z, by using the function goToPosition(x,y,z). This function make use of inverse kinematic, with a geometric approach. 
-The problem can be split up in to calculations, the calculation of $\theta_{2}$ and $\theta_{3}$, and the calculation of $\theta_{1}$. To calculate $\theta_{2}$ and $\theta_{3}$ we use the law of cosines.
+The problem can be split up in two calculations, the calculation of $\theta_{2}$ and $\theta_{3}$, and the calculation of $\theta_{1}$. To calculate $\theta_{2}$ and $\theta_{3}$ we use the law of cosines.
 
 \begin{figure}[H]
     \centering
@@ -187,7 +187,7 @@ Since the servomotors only can move inside 0-300 degrees, the code had to includ
 
 \textbf{Gripper}
 
-The gripper used to servomotors on the end of the arm. The main problem with the gripper was to make it stop when it noticed it couldn't move further, and therefore not squeezing the object it had to grip. This was done by first setting the zero position where the two parts of the gripper could touch, and setting this as the first goal position. Then it had to read the position continuous until it noticed that it had reach the max number of consecutive reads. When this number was reached, the motors would stop ensuring that the object would not be destroyed.
+The gripper used two servomotors on the end of the arm. The main problem with the gripper was to make it stop when it noticed it couldn't move further, and therefore not squeezing the object it had to grip. This was done by first setting the zero position where the two parts of the gripper could touch, and setting this as the first goal position. Then it had to read the position continuous until it noticed that it had reach the max number of consecutive reads. When this number was reached, the motors would stop ensuring that the object would not be destroyed and the motors would not overheat.
 
 \begin{figure}[H]
     \centering
@@ -206,11 +206,11 @@ The example file creates a manipulator with some given IDs and makes it move in 
 
 One important feature of all system is to be able to test things at different levels. All of the modules are supplied with example-code testing the most basic functions. We thought that it would be nice to test all of the modules together without going through the internet. Then we wouldn't have problems of latency for example. 
 
-The interface example program creates a window on the pi by using the X Window System. The window can detect mouse and keyboard input. To see the window you could hook up a monitor to the pi or you could use a program such as \textit{Xming}\footnote{\url{http://www.straightrunning.com/XmingNotes/}} which make it possible to open windows on the Raspberry Pi through the SSH connection. Explanation on how to do this is also explained here \footnote{\url{http://pihw.wordpress.com/guides/direct-network-connection/}} under step 3.
+The interface example program creates a window on the pi by using the X Window System. The window can detect mouse and keyboard input. To see the window you could connect a monitor to the pi or you could use a program such as \textit{Xming}\footnote{\url{http://www.straightrunning.com/XmingNotes/}} which make it possible to open windows on the Raspberry Pi through the SSH connection. Explanation on how to do this is also explained here \citep{direct-Pi} under step 3.
 
 In the window that the program creates you could move the manipulator in the X-Y-plane by pushing the left mouse button and moving the mouse around. You can move up and down in z-direction by scrolling the wheel, and grab things with the gripper by pushing right mouse button. With w,s,a,d buttons you can drive  around.
 
-The interface was very useful when debugging the hole program of the robot without the need of internet. Many problems arose due to the fact that there was much more communication on the bus, and due to other stress on the system. Also it was very pleasing to drive around and pick up things. 
+The interface was very useful when debugging the whole program of the robot without the need of internet. Many problems arose due to the fact that there was much more communication on the bus, and due to other stress on the system. Also it was very pleasing to drive around and pick up things. 
 
 \subsection{Sensor}
 
@@ -231,14 +231,11 @@ For future work one could also think about how to implement a mode for operating
 As said in the last section future problems could be to implement a better \textit{fail-safe} mode where you could operate the car or manipulator even though one of the servomotors is lost.
 \bigskip
 
-Another problem with the code that we discovered is the use of threads together with the use of the Dynamixel library. To ensure that multiple threads wasn't speaking on the data bus at the same time, we had to introduce mutexes for the send and receive functions. The problem was with a the timeout in the Dynamixel library functions. If to long time pass before the functions receive something back on the bus, the functions would give an error back with the error command \textit{RXTIMEOUT}. The problem then arose if one thread sends something on the data bus waiting for a response, another thread takes over and when the thread that was sending come back again it has gone to long time, and it issues an error. This could be done by increasing the timeout in the Dynamixel function, which requires some knowledge on how the library works. 
+Another problem with the code that we discovered is the use of threads together with the use of the Dynamixel library. To ensure that multiple threads wasn't speaking on the data bus at the same time, we had to introduce mutexes for the send and receive functions. The problem was with a timeout in the Dynamixel library functions. If too long time pass before the functions receive something back on the bus, the functions would give an error back with the error command \textit{RXTIMEOUT}. The problem then arose if one thread sends something on the data bus waiting for a response, another thread takes over and when the thread that was sending come back again it has gone to long time, and it issues an error. This could be done by increasing the timeout in the Dynamixel function, which requires some knowledge on how the library works. 
 A more elegant way is to make the communication functions \textit{atomic}, which would mean that no other thread could interrupt that thread when executing this line of code. %is this right?
 \bigskip
 
 The robot could be battery operated. Because the battery was quite dead we had to connect it to a power adapter. Also the Raspberry Pi was connected to the wall through an AC/DC adapter. With a better battery, one could make a circuit that also supplied the Pi through the battery, making the robot all cordless.
-\bigskip
-
-stream video to the internet instead of a local web server.
 
 %more:
 %main program thread sensor
