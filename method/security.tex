@@ -1,4 +1,5 @@
 \section{Security}
+\label{sec:security}
 Concerns related to security were, as they typically are in this day and age, a thing.
 Several issues arise as the platform allows users to control agents by issuing commands through a publicly available API, namely:
 
@@ -13,7 +14,6 @@ Several issues arise as the platform allows users to control agents by issuing c
 \subsection{X.509 Certificate and HTTPS}
 % write about the certificate and http here?
 A X.509 certificate \citep[section 3.1]{rfca} was installed on the server hosting the service.
-%TODO: EMIL HVORDAN BLE DETTE GJORT?
 These certificates are used in the SSL/TLS protocol as a proof of identity and to exchange the shared encryption key during the protocol's handshake.
 This allows users and agents to verify the identity of the service, however this must be done by the clients.
 This prevents attackers from trivially impersonating the service without access to its certificate.
@@ -24,7 +24,6 @@ The certificate also allows communication over HTTPS, which is like HTTP except 
 This prevents attackers from eavesdropping on the communication between the platform and connected entities.
 
 \subsection{Identification and authentication}
-%TODO: Emil kan du gå over dette avsnittet og se om ordene er riktig?
 In order to be able to identify an agent or user, the agent or user must be registered with the service.
 For the service, this means that a public key must be coupled with an unique ID, both of which the service has access to.
 Users and agents use the private key associated with the deposited public key to produce a digital signature for the request.

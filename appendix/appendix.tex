@@ -1,5 +1,6 @@
 \documentclass{book}
 
+\usepackage[left=2cm, right=2cm]{geometry} % set margins
 \usepackage{graphicx}
 \usepackage{listings}
 \usepackage{color}
@@ -124,7 +125,19 @@
 \section{SyncWrite}
 \lstinputlisting[language=C++]{example/SyncWrite/SyncWrite.c}
 
+\chapter{Server code}
 
+\section{Installation notes}
+\lstinputlisting{server/INSTALL}
 
+\section{Utility functions}
+\lstinputlisting[language=Python]{server/tools/decorators.py}
+\lstinputlisting[language=Python]{server/tools/helpers.py}
+
+\section{Server logic}
+\lstinputlisting[language=Python]{server/resources.py}
+
+\section{Main program}
+\lstinputlisting[language=Python]{server/server.py}
 
 \end{document}
