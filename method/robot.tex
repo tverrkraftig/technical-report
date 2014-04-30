@@ -12,9 +12,9 @@ The following was used to make this vehicle:
 \vspace{\secspace}
 
 \textbf{Raspberry Pi} (Pi) is a single board credit-card-sized computer. It runs on an 700 MHz ARM processor.
-It has two USB inputs, ethernet, HDMI and gpio (general purpose input output) headers. 
+It has two USB inputs, Ethernet, HDMI and GPIO (general purpose input output) headers. 
 This makes it the perfect prototyping computer for this kind of project. 
-The Pi is running its operating system from a SD card, and the OS is RaspBian which is a debian based linux distro.
+The Pi is running its operating system from a SD card, and the OS is RaspBian which is a Debian based Linux distribution.
 
 \begin{figure}[H]
     \centering
@@ -25,7 +25,7 @@ The Pi is running its operating system from a SD card, and the OS is RaspBian wh
 
 To control the Pi you can hook up a keyboard and a monitor directly to the board, or you can control it from another computer. 
 This is achieved by using a SSH server on the Pi and a SSH client on the computer. 
-SSH (Secure SHell) is a protocol that allows one computer to remotely controll another via command line. A widely known program for doing this is PuTTY. To login over SSH, you need to know the IP-address of the host. This can be done by setting the IP-address static or to scan the network to find out which IP the Pi would have. Since both of these approaches are difficult on a big network like NTNU, we had to find another approach. The solution was to connect the Pi directly to the computer via an ethernet cable. To do this we had to do some modifications, the full tutorial on how to do this see \footnote{\url{http://pihw.wordpress.com/guides/direct-network-connection/}}. To get internet access we first shared the Wi-Fi connection on the computer described here \footnote{\url{http://anwaarullah.wordpress.com/2013/08/12/sharing-wifi-internet-connection-with-raspberry-pi-through-lanethernet-headless-mode/}}. Later we used a Wi-Fi usb dongle. The driver for this dongle installed automatically and all we had to do was to configure \textit{/etc/network/interfaces}, and add the following:
+SSH (Secure SHell) is a protocol that allows one computer to remotely control another via command line. A widely known program for doing this is PuTTY. To login over SSH, you need to know the IP-address of the host. This can be done by setting the IP-address static or to scan the network to find out which IP the Pi would have. Since both of these approaches are difficult on a big network like NTNU, we had to find another approach. The solution was to connect the Pi directly to the computer via an Ethernet cable. To do this we had to do some modifications, the full tutorial on how to do this see \footnote{\url{http://pihw.wordpress.com/guides/direct-network-connection/}}. To get internet access we first shared the Wi-Fi connection on the computer described here \footnote{\url{http://anwaarullah.wordpress.com/2013/08/12/sharing-wifi-internet-connection-with-raspberry-pi-through-lanethernet-headless-mode/}}. Later we used a Wi-Fi USB dongle. The driver for this dongle installed automatically and all we had to do was to configure \textit{/etc/network/interfaces}, and add the following:
 \begin{verbatim}
     auto wlan0
     iface wlan0 inet dhcp
@@ -58,10 +58,10 @@ is a sensor device capable of measuring sound, brightness, heat and distance to 
 \bigskip
 
 \textbf{USB2Dynamixel} \footnote{\url{http://support.robotis.com/en/product/auxdevice/interface/usb2dxl_manual.htm}} is a USB device that allows the computer to create a virtual serial port (UART) and with some other circuitry, communicate with the servos over the USB port.
-This USB requires no driver installation when running linux, and since RaspBian is a linux distro this simplifies things. 
-The USB2Dynamixel is inserted into one of the USB ports on the Pi and the servor motors are connected to the device.
+This USB requires no driver installation when running Linux, and since RaspBian is a Linux distribution this simplifies things. 
+The USB2Dynamixel is inserted into one of the USB ports on the Pi and the servo motors are connected to the device.
 
-Since the Pi also has a hardware UART driver on two of its gpio headers, we thought about if we could communicate with the servos through these pins. 
+Since the Pi also has a hardware UART driver on two of its GPIO headers, we thought about if we could communicate with the servos through these pins. 
 To do this we had to make the circuitry described on page 8 in the datasheet [PUT REFZ H3R3]. 
 We would also have to implement our own code for the lower part of the communication (where we used a library from the manufacturer, more on that later).
 UART is also widely supported by many lower end microcontrollers which don't have the support for an OS. 
@@ -105,7 +105,7 @@ To make the servo motor move the example-program for the motor class could be us
 For this to work there are some important parameters which should be known:
 \begin{itemize}
      \item ID - Each motor has its own ID. This way its possible to control which motor that should get the command. The ID need to be change in the code to the ID of the motor. If the motor ID is unknown, you could use the \textit{pingAll()} function. This will search for IDs on the bus, and print out those that are active
-     \item Port - Which port the USB2Dynamixel is connected to. This is used to set up the communication to the motors. USB devices under linux can be found under \textit{/dev/usb}. When testing we used deviceIndex = 0 (\textit{/dev/usb0}).
+     \item Port - Which port the USB2Dynamixel is connected to. This is used to set up the communication to the motors. USB devices under Linux can be found under \textit{/dev/usb}. When testing we used deviceIndex = 0 (\textit{/dev/usb0}).
      \item Baudnumber - used to set the speed of the bus. This should always be one, which is 1Mbit/s, unless lower speeds are needed.
 \end{itemize}
 \bigskip
