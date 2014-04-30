@@ -19,6 +19,13 @@
 %\usepackage[citestyle=numbers,natbib=true,backend=biber]{biblatex}  % biblatex package
 \addbibresource{references.bib}                   % add references.bib
 
+\usepackage{etoolbox}
+\makeatletter
+\patchcmd{\l@chapter}{1.0em}{0.8em}{}{}
+\makeatother
+
+\addtolength{\textheight}{1.3in}
+
 % Use tikx libraries
 \usetikzlibrary{shadows.blur}
 \usetikzlibrary{shapes.symbols}
@@ -74,6 +81,7 @@
         \Large Petter S. \textsc{Storvik} \\
         \Large Odd Magnus \textsc{Trondrud}}
 \date{\today}
+
 
 % Document
 \begin{document}
