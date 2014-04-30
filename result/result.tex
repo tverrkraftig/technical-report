@@ -3,13 +3,15 @@ We should have like, a graph or drawing of the finished system here shouldn't wi
 Like those drawings Anders have been keeping safe in his lockerbox or whatever.
 
 
-The project was initially split into three parts. These were ``server'',``agent(robot)'' and ``server-agent communication''. 
+The project was initially split into three parts.
+These were the ``server'',``agent (robot)'' and ``server-agent communication''. 
 At the concluding phase of the project, these three part were combined to form the whole system.
-The planning work done early proved to be very good, as the finishing phase went surprisingly smooth. 
-The server part was augmented with a graphical user interface, which can be used from any web browser. 
+The planning work done early proved to be very useful: the finishing phase was completed without issues.
+
+A user client was implemented as a web-based graphical user interface useable from any modern web browser.
 It can be accessed by both smartphones and computer, and from anywhere in the world. 
-The robot's wheels and arm was successfully controlled via this interface. 
-The latency was tolerable for controlling the vehicle, but the system can in no way guarantee real time performance.
-The worst case agent-server latency is too high for this.
-The robot's error handling worked well, as its behavior was as intended when we introduced various error conditions.
+The robot's wheels and arm was successfully controlled via this interface.
+Experienced latency was tolerable when controlling the vehicle while both the controller and agent was connected to NTNU's eduroam network, with the server on an off-site location.
+However the system cannot guarantee real time performance on an arbitrary network, as no guarantees can be made about the worst case client-server latency as this is based on the clients' and server's internet connectivity.
+The robot's error handling worked well: its behavior was as intended when we introduced various error conditions.
 
