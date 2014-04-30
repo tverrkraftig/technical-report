@@ -1,10 +1,20 @@
-Direct connections for real time communication like video and driving
+This section details some possible avenues for future work on this project.
 
-Examine traffic overhead caused by layering the system on top of HTTP and using JSON.
+\paragraph{Streaming information} such as video or audio feeds from an agent to a user would currently have to be done through the API, transferring the information to the server as a string.
+This entails significant overhead, and the possibility of establishing a direct streaming link between agents and users or expanding the API somehow could be explored.
 
-Examine latency.
+\paragraph{Analyze communication overhead} due to the application being layered on top of HTTP and transmitting information as JSON.
 
-Figure out if it's possible to automate or boilerplate the clients in some manner.
-Because a lot of the work goes into making the agent and user client, and if people are technically competent enough to create those they're most likely capable of creating their own communication protocol.
+\paragraph{Examine latency bounds} on different kinds of networks.
 
+\paragraph{Implementing the agent} consumed a considerable amount of the development time.
+Could the process of designing and implementing an agent for a generic robot or device be simplified?
+
+\paragraph{Communication failsafes.}
 What should happen when the controller is disconnected or the robot loses its connection while executing a command?
+
+\paragraph{Multi-user control} is possible and there is no limit to how many users that can send control signals to a connected device.
+What possible issues could arise from two or more users attempting to control a device concurrently?
+How could this be prevented?
+
+\paragraph{Security} has been discussed, but are there other security related concerns with such a service?
