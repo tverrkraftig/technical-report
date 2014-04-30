@@ -3,7 +3,7 @@ To demonstrate the platform it was decided to make a vehicle with a manipulator 
 The following was used to make this vehicle:
 \begin{itemize}
     \item Raspberry Pi
-    \item Raspberry Pi Camera
+    \item Raspberry Pi Camera Module
     \item Dynamixel AX-12 Servomotors
     \item Dynamixel AX-S1 Integrated Sensor
     \item USB2Dynamixel
@@ -35,13 +35,22 @@ SSH (Secure SHell) is a protocol that allows one computer to remotely controll a
 We had to set up a own network to do this, because the eduroam network uses different setup.
 \bigskip
 
-\textbf{Raspberry Pi camera}
-
-Sven: si noe om kamera, og hvorfor det er så bra at det ikke går på usb, nevn litt om seriell kommunikasjon i samme slengen.
+\textbf{Raspberry Pi camera Module} \footnote{\url{http://www.raspberrypi.org/product/camera-module/}}
+is a camera that can be used to take high-definition video. It communicates to the Pi over a ribbon cable connected to the CSI port (see image). We installed a Raspberry Pi Cam Web Interface by entering these commands
+\begin{verbatim}
+    git clone
+    https://github.com/silvanmelchior/RPi_Cam_Web_Interface.git
+    cd RPi_Cam_Web_Interface
+    chmod u+x RPi_Cam_Web_Interface_Installer.sh
+    ./RPi_Cam_Web_Interface_Installer.sh install
+\end{verbatim}
+from this website \footnote{\url{http://www.raspberrypi.org/forums/viewtopic.php?f=43&t=63276}}.
+Remember to have the Pi updated and have installed git.
+Video from the camera could we then watch in the browser by entering the IP-address of the Pi in the address field.
 \bigskip
 
 \textbf{Dynamixel AX-12 servomotors}
-are motors that allows for precise controll of angle and velocity. These motors are controlled over a half duplex UART, which is a byte oriented asynchronous serial communication protocol. You can control the motors and receive feedback by sending commands to it corresponding to the control table in the datasheet [PUT REFZ H3R3]. The most important features is the control of position and velocity. The servos can work like normal servos where you can put in the desired position, and a controller inside the servo will make the servo go to that position. This position is limited to between 0-300 degrees (see datasheet). The servo can also work in so called "Endless Turn" mode, where the servos can spin infinite. Here you can only control the velocity which the motors run. "Endless Turn" mode is activated by setting the angle limits (CW Angle Limit and CCW Angle Limit) to zero.
+are motors that allows for precise control of angle and velocity. These motors are controlled over a half duplex UART, which is a byte oriented asynchronous serial communication protocol. You can control the motors and receive feedback by sending commands to it corresponding to the control table in the datasheet [PUT REFZ H3R3]. The most important features is the control of position and velocity. The servos can work like normal servos where you can put in the desired position, and a controller inside the servo will make the servo go to that position. This position is limited to between 0-300 degrees (see datasheet). The servo can also work in so called "Endless Turn" mode, where the servos can spin infinite. Here you can only control the velocity which the motors run. "Endless Turn" mode is activated by setting the angle limits (CW Angle Limit and CCW Angle Limit) to zero.
 \bigskip
 
 \textbf{Dynamixel AX-S1 Integrated Sensor}
@@ -68,7 +77,7 @@ There are functions for initializing the communication, terminate the communicat
 There is also a page describing platform porting \footnote{\url{http://support.robotis.com/en/software/dynamixel_sdk/sourcestructure.htm}}
 
 
-\subsection{The overall system}
+\subsection{The overall system of the robot}
 
 \begin{figure}[H]
     \centering
@@ -81,14 +90,14 @@ This is how the overall system was made. It was our intention to make the system
 
 The communication module was added because we used threads in our program. Since there are only one data-bus and therefore it can only be accessed by one thread, we had to implement \textit{Mutexes} such that only one thread can access the communication functions available in the dynamixel library at the time. \textit{Mutexes} are "locks" that protect such code blocks that can only be accessed by one at the time.
 
-\subsection{Wiggle It}
+\subsection{Servo motors}
 
 The first step is to make a servo motor move. 
 
 \begin{figure}[H]
     \centering
-    %sett inn bilde av basic oppsett her
-    \caption{Servo motor test setup}
+    \includegraphics[width=0.7\textwidth]{graphics/Basic_oppsett.png}
+    \caption{Servo motor test setup. The setup shows two motors, but that would not affect the code.}
     \label{fig:servo} 
 \end{figure}
 
@@ -111,7 +120,7 @@ This was implemented in the class Car. Four servomotors are mounted under the ba
 
 \begin{figure}[H]
     \centering
-    %sett inn bilde av undersiden av bilen her
+    \includegraphics[width=0.7\textwidth]{graphics/Car.png}
     \caption{car overview}
     \label{fig:car} 
 \end{figure}
@@ -125,7 +134,7 @@ A manipulator was added to be able to pick up things and look around with the ca
 
 \begin{figure}[H]
     \centering
-    %sett inn figure her
+    \includegraphics[width=0.7\textwidth]{graphics/Manipulator.png}
     \caption{manipulator overview}
     \label{fig:manipulator} 
 \end{figure}
@@ -140,7 +149,7 @@ The problem can be split up in to calculations, the calculation of $\theta_{2}$ 
 
 \begin{figure}[H]
     \centering
-    %sett inn figure her
+    \includegraphics[width=0.7\textwidth]{graphics/Inverse_kinematic_1.jpg}	
     \caption{manipulator from the side}
     \label{fig:manipulator_side} 
 \end{figure}
@@ -152,18 +161,8 @@ r^2 = x_{c}^2 + y_{c}^2\\
 \cos(\theta_{3}) = \frac{z_{c}^2 + x_{c}^2 + y_{c}^2 - d_{2}^2 - d_{3}^2}{2d_{2}d_{3}} = D\\
 \sin(\theta_{3}) = \pm\sqrt{1-D^2}\\
 \theta_{3} = \arctan(\frac{\pm\sqrt{1-D^2}}{D})
-\end{split}
-\end{displaymath}
-
-\begin{figure}[H]
-    \centering
-    %sett inn figure her
-    \caption{manipulator from the side}
-    \label{fig:manipulator_side2} 
-\end{figure}
-
-\begin{displaymath}
-\begin{split}
+\\
+\\
 \theta_{2} = \frac{\pi}{2} - \alpha - \phi\\
 \theta_{2} = \frac{\pi}{2} - \arctan(\frac{d_{3}\sin(\theta_{3})}{d_{2}+d_{3}\cos(\theta_{3})}) - \arctan(\frac{z_{c}}{r})
 \end{split}
@@ -174,7 +173,7 @@ The length $d_{2}$ and $d_{3}$ had to be measured in mm and set in the code.
 
 \begin{figure}[H]
     \centering
-    %sett inn figure her
+    \includegraphics[width=0.7\textwidth]{graphics/Inverse_kinematic_2.jpg}
     \caption{manipulator from the top}
     \label{fig:manipulator_top} 
 \end{figure}
@@ -192,7 +191,7 @@ The gripper used to servomotors on the end of the arm. The main problem with the
 
 \begin{figure}[H]
     \centering
-    %sett inn bilde av gripper her
+    \includegraphics[width=0.7\textwidth]{graphics/Gripper.png}
     \caption{Gripper}
     \label{fig:gripper} 
 \end{figure}
