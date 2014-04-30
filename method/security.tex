@@ -49,7 +49,7 @@ An example of ``improper maintenance'' could be that the owners, wishing that no
 
 
 \subsection{Replay attacks}
-Exposure to replay attacks is mitigated when end-to-end encryption is used for communication, as attackers need to obtain a plaintext copy of a valid command in order to replay it.
+Exposure to replay attacks is mitigated when end-to-end encryption is used for communication, as attackers need to obtain a plain text copy of a valid command in order to replay it.
 They can be further guarded against by including a timestamp in the signature and discarding all incoming requests with a timestamp older than some amount of time.
 Since the timestamp is a part of the signature altering it should cause the signature to fail to validate, causing the message to be discarded.
 
@@ -60,7 +60,7 @@ If the hash of an incoming message matches one already executed in the past some
 While a system may claim certain to possess certain security guarantees, these are in effect by the virtue of the underlying implementations.
 Even if the underlying mathematics of whatever encryption or security protocol has been proven to be secure, faults or exploits could be found in the implementations.
 
-For example, on the 7th of April 2014, the existence of a vulnerability in several newer versions of OpenSSL was made public (\citetitle{hb-openssl-news}).
+For example, on the seventh April 2014, the existence of a vulnerability in several newer versions of OpenSSL was made public (\citetitle{hb-openssl-news}).
 This vulnerability, nicknamed ``Heartbleed''~\citep{heartbleed}, allowed remote attackers to obtain sensitive information (e.g. the server's private key) from web servers running the affected versions of OpenSSL.
 This is an example of an implementation vulnerability: Even if the theory is sound, the implementation might not be.
 There is little possibility of safeguarding entirely against such eventualities -- even if one uses the more stable and secure versions of a program or software, there might exist vulnerabilities unknown to the public.
