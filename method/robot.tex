@@ -19,15 +19,12 @@ The following was used to make this vehicle:
 \end{figure}
 
 \textbf{Raspberry Pi} (Pi) is a single board credit-card-sized computer. It runs on an 700 MHz ARM processor.
-<<<<<<< HEAD
 It has two USB inputs, Ethernet, HDMI and GPIO (General-Purpose Input/Output) headers. 
 This makes it the perfect prototyping computer for this kind of project. 
 The Pi is running its operating system from a SD card, and the OS is RaspBian which is a debian based Linux distro.
-=======
 It has two USB inputs, Ethernet, HDMI and GPIO (general purpose input output) headers. 
 This makes it the perfect prototyping computer for this kind of project. 
 The Pi is running its operating system from a SD card, and the OS is RaspBian which is a Debian based Linux distribution.
->>>>>>> eceb083a25ea2fab9e2a2ddc28da7565cf09b60b
 
 To control the Pi you can hook up a keyboard and a monitor directly to the board, or you can control it from another computer. 
 This is achieved by using a SSH server on the Pi and a SSH client on the computer. 
@@ -64,11 +61,8 @@ is a sensor device capable of measuring sound, brightness, heat and distance to 
 \bigskip
 
 \textbf{USB2Dynamixel} \footnote{\url{http://support.robotis.com/en/product/auxdevice/interface/usb2dxl_manual.htm}} is a USB device that allows the computer to create a virtual serial port (UART) and with some other circuitry, communicate with the servos over the USB port.
-<<<<<<< HEAD
 This USB requires no driver installation when running Linux, and since RaspBian is a Linux distro this simplifies things. 
-=======
 This USB requires no driver installation when running Linux, and since RaspBian is a Linux distribution this simplifies things. 
->>>>>>> eceb083a25ea2fab9e2a2ddc28da7565cf09b60b
 The USB2Dynamixel is inserted into one of the USB ports on the Pi and the servo motors are connected to the device.
 
 Since the Pi also has a hardware UART driver on two of its GPIO headers, we thought about if we could communicate with the servos through these pins. 
